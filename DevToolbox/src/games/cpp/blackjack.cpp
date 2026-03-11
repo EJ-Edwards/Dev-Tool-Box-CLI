@@ -37,13 +37,60 @@ static std::mt19937& rng() {
     return gen;
 }
 
-static std::vector<Card> buildDeck() {
+enum BJDifficulty { BJ_EASY = 1, BJ_MODERATE = 2, BJ_HARD = 3 };
+
+static std::vector<Card> buildDeck(int numDecks = 1) {
     std::vector<Card> deck;
-    for (int s = Card::Hearts; s <= Card::Spades; ++s)
-        for (int r = Card::Two; r <= Card::Ace; ++r)
-            deck.emplace_back(static_cast<Card::Suit>(s), static_cast<Card::Rank>(r));
+    for (int d = 0; d < numDecks; ++d)
+        for (int s = Card::Hearts; s <= Card::Spades; ++s)
+            for (int r = Card::Two; r <= Card::Ace; ++r)
+                deck.emplace_back(static_cast<Card::Suit>(s), static_cast<Card::Rank>(r));
     std::shuffle(deck.begin(), deck.end(), rng());
     return deck;
+}
+
+// Returns true if dealer should hit based on difficulty
+static bool dealerShouldHit(const std::vector<Card>& hand, BJDifficulty diff) {
+    int total = handValue(hand);
+    switch (diff) {
+        case BJ_EASY:
+            // Dealer stands on 15+ (plays poorly)
+            return total < 15;
+        case BJ_MODERATE:
+            // Standard: hits below 17
+            return total < 17;
+        case BJ_HARD: {
+            // Hits on soft 17 (hand has ace counted as 11 and total is 17)
+            if (total < 17) return true;
+            if (total == 17) {
+                // Check for soft 17: at least one ace still counted as 11
+                int rawTotal = 0;
+                int aces = 0;
+                for (const auto& c : hand) {
+                    rawTotal += c.getValue();
+                    if (c.getRank() == Card::Ace) ++aces;
+                }
+                int reduced = 0;
+                while (rawTotal > 21 && reduced < aces) {
+                    rawTotal -= 10;
+                    ++reduced;
+                }
+                // Soft 17 means there's still an unreduced ace
+                return reduced < aces;
+            }
+            return false;
+        }
+    }
+    return total < 17;
+}
+
+static std::string bjDifficultyName(BJDifficulty d) {
+    switch (d) {
+        case BJ_EASY:     return "Easy";
+        case BJ_MODERATE: return "Moderate";
+        case BJ_HARD:     return "Hard";
+    }
+    return "Unknown";
 }
 
 static Card dealCard(std::vector<Card>& deck) {
@@ -82,8 +129,24 @@ static void showHand(const std::string& name, const std::vector<Card>& hand, boo
 
 void run_blackjack() {
     std::cout << "\n  === BLACKJACK ===\n\n";
+    std::cout << "  Select difficulty:\n";
+    std::cout << "    1. Easy     (dealer stands on 15+, you can see dealer's card)\n";
+    std::cout << "    2. Moderate (standard rules)\n";
+    std::cout << "    3. Hard     (6-deck shoe, dealer hits soft 17, ties lose)\n";
+    std::cout << "  >> ";
 
-    auto deck = buildDeck();
+    BJDifficulty diff = BJ_MODERATE;
+    std::string diffInput;
+    if (std::getline(std::cin, diffInput) && !diffInput.empty()) {
+        if (diffInput == "1" || diffInput == "easy" || diffInput == "e")        diff = BJ_EASY;
+        else if (diffInput == "2" || diffInput == "moderate" || diffInput == "m") diff = BJ_MODERATE;
+        else if (diffInput == "3" || diffInput == "hard" || diffInput == "h")    diff = BJ_HARD;
+    }
+
+    std::cout << "\n  Difficulty: " << bjDifficultyName(diff) << "\n\n";
+
+    int numDecks = (diff == BJ_HARD) ? 6 : 1;
+    auto deck = buildDeck(numDecks);
     std::vector<Card> player, dealer;
 
     // Initial deal
@@ -105,8 +168,9 @@ void run_blackjack() {
     }
 
     // Player turn
+    bool hideDealerCard = (diff != BJ_EASY);
     while (true) {
-        showHand("Dealer", dealer, true);
+        showHand("Dealer", dealer, hideDealerCard);
         showHand("You   ", player);
 
         if (handValue(player) > 21) {
@@ -131,9 +195,12 @@ void run_blackjack() {
         }
     }
 
-    // Dealer turn — hits on 16 or below, stands on 17+
-    std::cout << "\n  Dealer reveals: " << dealer[0].toString() << "\n";
-    while (handValue(dealer) < 17) {
+    // Dealer turn
+    if (hideDealerCard)
+        std::cout << "\n  Dealer reveals: " << dealer[0].toString() << "\n";
+    else
+        std::cout << "\n";
+    while (dealerShouldHit(dealer, diff)) {
         dealer.push_back(dealCard(deck));
         std::cout << "  Dealer hits: " << dealer.back().toString() << "\n";
     }
@@ -147,6 +214,8 @@ void run_blackjack() {
     if (dv > 21)         std::cout << "\n  Dealer busts! You win!\n";
     else if (pv > dv)    std::cout << "\n  You win!\n";
     else if (pv < dv)    std::cout << "\n  Dealer wins.\n";
+    else if (diff == BJ_HARD)
+                         std::cout << "\n  Tie goes to dealer — you lose.\n";
     else                 std::cout << "\n  Push — it's a tie.\n";
 }
 
