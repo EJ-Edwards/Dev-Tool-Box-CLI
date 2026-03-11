@@ -100,6 +100,7 @@ static void showGamesMenu() {
         std::cout << "  ║  4. Snake                        ║\n";
         std::cout << "  ║  5. Sudoku                       ║\n";
         std::cout << "  ║  6. Tic Tac Toe                  ║\n";
+        std::cout << "  ║  7. Timer/Stopwatch              ║\n";
         std::cout << "  ║  0. Back                         ║\n";
         std::cout << "  ╚══════════════════════════════════╝\n";
 
@@ -111,6 +112,7 @@ static void showGamesMenu() {
             case 4: run_snake();                 pauseScreen(); break;
             case 5: run_sudoku();                pauseScreen(); break;
             case 6: run_tic_tac_toe();           pauseScreen(); break;
+            case 7: run_timer_stopwatch();       pauseScreen(); break;
             case 0: return;
             default:
                 std::cout << "  Invalid option.\n";
