@@ -1,0 +1,32 @@
+from .todo_list import todolist
+from .timer_stopwatch import TimerStopwatch
+from .password_generator import password_generator
+
+def main():
+    while True:
+        print("\nUtilities Menu:")
+        print("1. To-do list")
+        print("2. TimerStopwatch")
+        print("3. Password generator")
+        print("4. Notes")
+        print("0. Exit")
+
+        choice = input("Choose an option: ")
+        if choice == "1":
+            todolist()
+        elif choice == "2":
+            stopwatch = TimerStopwatch()
+            stopwatch.stopwatch()
+        elif choice == "3":
+            password_generator()
+        elif choice == "4":
+            # Call the notes function here
+            pass
+        elif choice == "0":
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+
+if __name__ == "__main__":
+    main()

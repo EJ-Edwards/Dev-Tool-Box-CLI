@@ -1,3 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/dudem/OneDrive/Documents/GitHub/Dev-Tool-Box CLI/DevToolbox"
+    "cmake.sourceDirectory": "${workspaceFolder}/DevToolbox",
+    "cmake.configureOnOpen": true,
+    "C_Cpp.default.compilerPath": "cl.exe"
 }
