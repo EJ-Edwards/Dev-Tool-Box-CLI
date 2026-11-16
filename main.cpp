@@ -1,57 +1,89 @@
 #include <iostream>
 #include <cstdlib>
 
+// These declarations let the menu call functions that are defined later.
+void options();
+int runPythonUtilities();
+int runCppUtilities();
+int runCppGame();
+int runCommand(const char* command, const char* programName);
+
+// This starts the program by showing the logo and opening the main menu.
 int main()
 {
+    // This prints the Dev Tool Box logo.
     std::cout << R"(  ____               _____           _   ____               ____ _     ___
  |  _ \  _____   __ |_   _|__   ___ | | | __ )  _____  __  / ___| |   |_ _|
  | | | |/ _ \ \ / /   | |/ _ \ / _ \| | |  _ \ / _ \ \/ / | |   | |    | |
  | |_| |  __/\ V /    | | (_) | (_) | | | |_) | (_) >  <  | |___| |___ | |
  |____/ \___| \_/     |_|\___/ \___/|_| |____/ \___/_/\_\  \____|_____|___|
 )";
+    // This opens the menu after the logo is shown.
+    options();
     return 0;
 }
 
-int options()
+// This shows the main choices and runs the program the player selects.
+void options()
 {
     std::cout << "Please select an option:\n";
-    std::cout << "1. Run Utilities\n";
-    std::cout << "2. Run Game\n";
+    std::cout << "1. Run Utilities Python\n";
+    std::cout << "2. Run Utilities C++\n";
+    std::cout << "3. Run Game C++\n";
+    std::cout << "4. Exit\n";
 
+
+    // This stores the number the player enters.
     int choice;
-    std::cin >> choice;
+    // This checks that the player entered a number.
+    if (!(std::cin >> choice)) {
+        std::cerr << "Invalid input. Please enter a number.\n";
+        return;
+    }
 
-    if (choice == 1) {
+    // This calls the matching program based on the selected number.
+    switch (choice) {
+    case 1:
         runPythonUtilities();
-    }
-   
-    else if (choice == 2) {
-        runPythongame();
-    }
-
-    else{
-        std::cerr << "Invalid choice. Please select 1 or 2.\n";
+        break;
+    case 2:
+        runCppUtilities();
+        break;
+    case 3:
+        runCppGame();
+        break;
+    case 4:
+        return;
+    default:
+        std::cerr << "Invalid choice. Please select 1, 2, 3, or 4.\n";
+        break;
     }
 }
 
+// This runs a command and reports if it exits with an error.
+int runCommand(const char* command, const char* programName)
+{
+    const int status = std::system(command);
+    if (status != 0) {
+        std::cerr << programName << " exited with an error.\n";
+    }
+    return status;
+}
+
+// This starts the Python utilities menu.
 int runPythonUtilities()
 {
-    int status = std::system("py -3 -m src.utils.python.utilsmain");
-
-    if (status != 0) {
-        std::cerr << "Python utilities exited with an error.\n";
-    }
-
-    return status;
+    return runCommand("py -3 -m src.utils.python.utilsmain", "Python utilities");
 }
 
-int runPythongame()
+// This starts the C++ utilities program.
+int runCppUtilities()
 {
-    int status = std::system("py -3 -m src.games.python.game");
+    return runCommand("build-cmake\\bin\\cpp_utilities.exe", "C++ utilities");
+}
 
-    if (status != 0){
-        std::cerr << "Python game exited with an error.\n";
-    }
-
-    return status;
+// This starts the C++ games program.
+int runCppGame()
+{
+    return runCommand("build-cmake\\bin\\cpp_games.exe", "C++ games");
 }

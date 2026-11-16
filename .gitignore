@@ -1,3 +1,4 @@
 src/utils/python/__pycache__
 .vscode
 build
+build-cmake

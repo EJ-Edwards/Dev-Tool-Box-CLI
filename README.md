@@ -1,22 +1,35 @@
-# Dev-Tool-Box-CLI
+# Dev Tool Box CLI
 
-DevToolBoxCLI is a open source utility kit that can be used for your everyday life and also you can play games on it. 
+A command-line toolbox with utilities and games written in C++ and Python.
 
+## Requirements
 
-## Setup
+- Windows
+- Visual Studio Build Tools with the C++ workload
+- The CMake Tools extension for VS Code
+- Python 3 available through the Windows `py` launcher
 
-First what you do is git clone as thats how you can get the repo on to your local machine
-``` git clone https://github.com/EJ-Edwards/CloudLedger.git```
+The Python utilities use only the standard library, so no packages need to be installed from `requirements.txt`.
 
-Second what you do is 
+## Configure and build
 
+1. Open the repository folder in VS Code.
+2. Use CMake Tools to configure the project and select the Visual Studio C++ kit.
+3. Use **CMake: Build** to build all targets.
 
+The executables are created in `build-cmake/bin`:
 
+- `dev_tool_box.exe` — top-level launcher
+- `cpp_utilities.exe` — C++ calculator and unit converters
+- `cpp_games.exe` — C++ game menu
 
+## Run
 
+Run `build-cmake\bin\dev_tool_box.exe` from the repository root. The launcher starts Python utilities with `py -3` and starts the C++ utility and game programs from `build-cmake\bin`.
 
+## Project layout
 
-
-
-
-## Example
+- `main.cpp` — top-level launcher
+- `src/utils/python` — Python utilities
+- `src/utils/cpp` — C++ calculator and unit converters
+- `src/games/cpp` — C++ games and game menu

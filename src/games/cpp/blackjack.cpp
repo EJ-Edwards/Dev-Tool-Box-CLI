@@ -4,7 +4,9 @@
 #include <random>
 #include <string>
 #include <limits>
+#include "blackjack.h"
 
+// This stores a card's suit and rank.
 class Card {
 public:
     enum Suit { Hearts, Diamonds, Clubs, Spades };
@@ -12,6 +14,7 @@ public:
 
     Card(Suit suit, Rank rank) : suit(suit), rank(rank) {}
 
+    // This gets the card's point value for Blackjack.
     int getValue() const {
         if (rank >= Two && rank <= Nine) return rank + 2;
         if (rank >= Ten && rank <= King) return 10;
@@ -32,6 +35,8 @@ private:
     Rank rank;
 };
 
+static int handValue(const std::vector<Card>& hand);
+
 static std::mt19937& rng() {
     static std::mt19937 gen(std::random_device{}());
     return gen;
@@ -39,6 +44,7 @@ static std::mt19937& rng() {
 
 enum BJDifficulty { BJ_EASY = 1, BJ_MODERATE = 2, BJ_HARD = 3 };
 
+// This creates and shuffles one or more decks of cards.
 static std::vector<Card> buildDeck(int numDecks = 1) {
     std::vector<Card> deck;
     for (int d = 0; d < numDecks; ++d)
@@ -99,6 +105,7 @@ static Card dealCard(std::vector<Card>& deck) {
     return card;
 }
 
+// This totals the hand and counts an Ace as 1 if 11 would cause a bust.
 static int handValue(const std::vector<Card>& hand) {
     int total = 0;
     int aces = 0;
@@ -113,6 +120,7 @@ static int handValue(const std::vector<Card>& hand) {
     return total;
 }
 
+// This prints a hand and can hide its first card.
 static void showHand(const std::string& name, const std::vector<Card>& hand, bool hideFirst = false) {
     std::cout << "  " << name << ": ";
     for (size_t i = 0; i < hand.size(); ++i) {
@@ -127,6 +135,7 @@ static void showHand(const std::string& name, const std::vector<Card>& hand, boo
     std::cout << "\n";
 }
 
+// This runs a Blackjack game using the selected difficulty.
 void run_blackjack() {
     std::cout << "\n  === BLACKJACK ===\n\n";
     std::cout << "  Select difficulty:\n";

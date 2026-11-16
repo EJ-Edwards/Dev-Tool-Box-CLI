@@ -4,6 +4,8 @@
 #include <limits>
 #include <algorithm>
 #include <array>
+#include <cctype>
+#include "rock_paper_scissors.h"
 
 static std::mt19937& rng() {
     static std::mt19937 gen(std::random_device{}());
@@ -47,6 +49,7 @@ static int easyChoice(int /*unused*/) {
     return dist(rng()); // 0-3 mapped below is wrong, let's use weighted
 }
 
+// This chooses the computer's move based on the selected difficulty.
 static int computerPick(Difficulty diff, const std::array<int, 3>& playerHistory, int totalRounds) {
     std::uniform_int_distribution<int> dist(0, 2);
 
@@ -86,6 +89,7 @@ static int computerPick(Difficulty diff, const std::array<int, 3>& playerHistory
     return dist(rng());
 }
 
+// This gets the display name for the selected difficulty.
 static std::string difficultyName(Difficulty d) {
     switch (d) {
         case EASY:     return "Easy";
@@ -95,6 +99,7 @@ static std::string difficultyName(Difficulty d) {
     return "Unknown";
 }
 
+// This runs a match of Rock Paper Scissors.
 void run_rock_paper_scissors() {
     int playerScore = 0;
     int computerScore = 0;
@@ -128,8 +133,11 @@ void run_rock_paper_scissors() {
         std::string input;
         if (!std::getline(std::cin, input) || input.empty()) continue;
 
-        // Trim and lowercase
-        std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+        // This makes the input lowercase so choices like "R" and "rock" work.
+        std::transform(input.begin(), input.end(), input.begin(),
+                       [](unsigned char character) {
+                           return static_cast<char>(std::tolower(character));
+                       });
 
         if (input == "quit" || input == "q") {
             std::cout << "  Game ended early.\n";

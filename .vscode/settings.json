@@ -1,5 +1,6 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/DevToolbox",
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.buildDirectory": "${workspaceFolder}/build-cmake",
     "cmake.configureOnOpen": true,
     "C_Cpp.default.compilerPath": "cl.exe"
 }
