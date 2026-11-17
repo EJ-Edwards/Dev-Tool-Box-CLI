@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <limits>
 
 // These declarations let the menu call functions that are defined later.
 void options();
@@ -26,37 +27,45 @@ int main()
 // This shows the main choices and runs the program the player selects.
 void options()
 {
-    std::cout << "Please select an option:\n";
-    std::cout << "1. Run Utilities Python\n";
-    std::cout << "2. Run Utilities C++\n";
-    std::cout << "3. Run Game C++\n";
-    std::cout << "4. Exit\n";
+    // This keeps showing the main menu after a module closes.
+    while (true) {
+        std::cout << "\nPlease select an option:\n";
+        std::cout << "1. Run Utilities Python\n";
+        std::cout << "2. Run Utilities C++\n";
+        std::cout << "3. Run Game C++\n";
+        std::cout << "4. Exit\n";
 
+        // This stores the number the player enters.
+        int choice;
+        // This checks that the player entered a number.
+        if (!(std::cin >> choice)) {
+            if (std::cin.eof()) {
+                return;
+            }
+            // This clears invalid input so the menu can ask again.
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cerr << "Invalid input. Please enter a number.\n";
+            continue;
+        }
 
-    // This stores the number the player enters.
-    int choice;
-    // This checks that the player entered a number.
-    if (!(std::cin >> choice)) {
-        std::cerr << "Invalid input. Please enter a number.\n";
-        return;
-    }
-
-    // This calls the matching program based on the selected number.
-    switch (choice) {
-    case 1:
-        runPythonUtilities();
-        break;
-    case 2:
-        runCppUtilities();
-        break;
-    case 3:
-        runCppGame();
-        break;
-    case 4:
-        return;
-    default:
-        std::cerr << "Invalid choice. Please select 1, 2, 3, or 4.\n";
-        break;
+        // This calls the matching program based on the selected number.
+        switch (choice) {
+        case 1:
+            runPythonUtilities();
+            break;
+        case 2:
+            runCppUtilities();
+            break;
+        case 3:
+            runCppGame();
+            break;
+        case 4:
+            return;
+        default:
+            std::cerr << "Invalid choice. Please select 1, 2, 3, or 4.\n";
+            break;
+        }
     }
 }
 
@@ -73,7 +82,7 @@ int runCommand(const char* command, const char* programName)
 // This starts the Python utilities menu.
 int runPythonUtilities()
 {
-    return runCommand("py -3 -m src.utils.python.utilsmain", "Python utilities");
+    return runCommand("python -m src.utils.python.utilsmain", "Python utilities");
 }
 
 // This starts the C++ utilities program.

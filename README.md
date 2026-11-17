@@ -7,9 +7,9 @@ A command-line toolbox with utilities and games written in C++ and Python.
 - Windows
 - Visual Studio Build Tools with the C++ workload
 - The CMake Tools extension for VS Code
-- Python 3 available through the Windows `py` launcher
+- Python 3 available on `PATH` as `python`
 
-The Python utilities use only the standard library, so no packages need to be installed from `requirements.txt`.
+The Python utilities use only the standard library, so no external Python packages need to be installed.
 
 ## Configure and build
 
@@ -25,7 +25,7 @@ The executables are created in `build-cmake/bin`:
 
 ## Run
 
-Run `build-cmake\bin\dev_tool_box.exe` from the repository root. The launcher starts Python utilities with `py -3` and starts the C++ utility and game programs from `build-cmake\bin`.
+Run `build-cmake\bin\dev_tool_box.exe` from the repository root. The launcher starts Python utilities with `python` and starts the C++ utility and game programs from `build-cmake\bin`.
 
 ## Project layout
 

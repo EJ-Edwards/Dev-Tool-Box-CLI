@@ -182,7 +182,7 @@ void run_rock_paper_scissors() {
     std::cout << "  Rounds:   " << rounds << "\n";
 
     if (playerScore >= 3)
-        std::cout << "\n  Congratulations — you win the match!\n";
+        std::cout << "\n  Congratulations - you win the match!\n";
     else if (computerScore >= 3)
         std::cout << "\n  The computer wins the match. Better luck next time!\n";
     std::cout << std::endl;

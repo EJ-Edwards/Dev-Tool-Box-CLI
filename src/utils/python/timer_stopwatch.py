@@ -6,6 +6,10 @@ class TimerStopwatch:
 
     # This function is for the stopwatch, it will start and stop the timer
     def stopwatch(self):
+        # This shows the commands after the user opens the stopwatch.
+        print("Simple Stopwatch")
+        print("Commands: 'start', 'stop', 'reset', 'exit'")
+
         start_time = None
         elapsed_time = 0
 
@@ -40,7 +44,3 @@ class TimerStopwatch:
                 break
             else:
                 print("Invalid command. Please try again.")
-    print("Simple Stopwatch")
-    print("Commands: 'start', 'stop', 'reset', 'exit'")
-    
-    
